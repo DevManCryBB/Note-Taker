@@ -1,35 +1,20 @@
 const router = require("express").Router();
-const db = require('../db/db.json');
-const randomNum = ("uuid");
-const fs = require("fs");
+const store = require("../db/store")
 
-router.get("./notes", (req, res) => {
-    return res.json(db);
+router.get('/notes', (req, res) => {
+  store
+    .getNotes()
+    .then((notes) => {
+      return res.json(notes);
+    })
+    .catch((err) => res.status(500).json(err));
 });
 
-router.post("./notes", (req,res) => {
-
-    fs.readFile("../db/db.json", "utf-8", (err, data) => {
-        if (err) {
-            return res.status(500).json({ msg: "error reading db" });
-        } else {
-            const dataArr = JSON.parse(data);
-            const newNote = {
-                id: randomNum,
-                title: req.body.title,
-                text: req.body.text,
-            };
-            dataArr.push(newNote);
-            fs.writeFile("../db/db.json", JSON.stringify(dataArr, null, 4), (err) => {
-                if (err) {
-                    return res.status(500).json({ msg: "error writing db" });
-                } else {
-                    return res.json(newNote)
-                }
-            })
-        }
-    })
-
+router.post('/notes', (req, res) => {
+  store
+    .addNotes(req.body)
+    .then((note) => res.json(note))
+    .catch((err) => res.status(500).json(err));
 });
 
 module.exports = router;
