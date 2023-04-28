@@ -37,12 +37,6 @@ class Store {
       .then((updatedNotes) => this.write(updatedNotes))
       .then(() => newNote);
   }
-  // deleteNotes(id)
-  // return this.getNotes
-  // this will return a promise object w notes
-  // filter the notes by id
-  // .then write to the notes
-  // router.delete(/notes/id) (in api routes)
 }
 
 module.exports = new Store()
